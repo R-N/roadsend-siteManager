@@ -39,7 +39,7 @@ $SM_siteID      = "TESTSITE";
 require("siteManager.inc");
 
 // set base admin directory
-$adminDir = "/var/www/testSite/admin/";
+$adminDir = 'D:/laragon4/www/testSite/admin/';
 
 // this is a global defined to test teh GCS
 $testGlobal = 'FU';
