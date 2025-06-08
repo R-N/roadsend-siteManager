@@ -39,99 +39,84 @@ class addEditorAction extends SM_dbEditorAction {
      * Method to handle what gets done if the 
      * data on the form is Verified
      */
+    
     function dataVerified($myForm) {
         $dbEditor = $this->getDbEditor();
         $database = $dbEditor->dbHL[$dbEditor->directive['dataBaseID']];
-        $SQL = "INSERT INTO {$dbEditor->directive['tableName']} SET ";
-
-        // loop through the variables in the form and update the database
+        $table = $dbEditor->directive['tableName'];
         $fList = $myForm->getVarList();
 
-        // build the update query               
+        $columns = array();
+        $values = array();
+
         foreach ($fList as $f) {
-
-            // set the value for file uploads to the file name
-            if ($f == $dbEditor->directive['fileUpload']) {
-
-                // Skip on blank - so they don't have to reload the image
-                if (empty($this->fileName))
-                    continue;
-
+            if ($f === $dbEditor->directive['fileUpload']) {
+                if (empty($this->fileName)) continue;
                 $val = $fileName;
-
-            // pull the normal value
             } else {
                 $val = $myForm->getVar($f);
             }
 
+            if ($val === '') continue;
 
-            // see how we need to write out the variable in the query based on it's type
-            if ($val=='') {
-                // nothing to see here, move along.
+            if (($autoDateFields = $this->getDirective('autoDateFields')) && in_array($f, $autoDateFields)) {
+                $columns[] = $f;
+                $values[] = "NOW()";
                 continue;
-            } else {
-                if (get_magic_quotes_gpc())
-                    $data = "'".$val."'";
-                else
-                    $data = "'".addslashes($val)."'";
             }
 
-            // check for field hook by directive
-            // NOTE this only handles auto creation when the field was actually
-            // added to the form. this often isn't the case because these fields are
-            // often hidden. that's taken care of after this loop (weyrick)
-            if (($autoDateFields = $this->getDirective('autoDateFields')) != NULL) {
-                // handle dateCreated type fields by setting their value to NOW()
-                if (in_array($f, $autoDateFields)) {
-                    // override data
-                    $data = 'NOW()';
-                }            
+            if (($autoMD5Fields = $this->getDirective('autoMD5Fields')) && in_array($f, $autoMD5Fields)) {
+                $columns[] = $f;
+                $values[] = "'" . md5(uniqid(rand(), true)) . "'";
+                continue;
             }
-            if (($autoMD5Fields = $this->getDirective('autoMD5Fields')) != NULL) {
-                // handle auto generation of MD5 fields
-                if (in_array($f, $autoMD5Fields)) {
-                    // override data
-                    $data = "'".md5(uniqid(rand(),true))."'";
+
+            $columns[] = $f;
+            $escapedVal = addslashes($val); // Ideally use prepared statements
+            $values[] = "'{$escapedVal}'";
+        }
+
+        // Handle auto fields not in form
+        if (($autoDateFields = $this->getDirective('autoDateFields'))) {
+            foreach ($autoDateFields as $f) {
+                if (!in_array($f, $fList)) {
+                    $columns[] = $f;
+                    $values[] = "NOW()";
                 }
             }
-
-            // append to SQL query  
-            $SQL .= "$f=$data, ";  
-
         }
 
-        // here we handle auto creation of fields that weren't in the table, but were in
-        // auto creation directives
-        if (($autoDateFields = $this->getDirective('autoDateFields')) != NULL) {
-            foreach ($autoDateFields as $adF) {
-                // handle dateCreated type fields by setting their value to NOW()
-                if (!in_array($adF, $fList)) {
-                    // directive wasn't in main field list, add it here
-                    $SQL .= "$adF=NOW(), ";
-                }            
-            }
-        }
-        if (($autoMD5Fields = $this->getDirective('autoMD5Fields')) != NULL) {
-            foreach ($autoMD5Fields as $mdF) {
-                // handle dateCreated type fields by setting their value to NOW()
-                if (!in_array($mdF, $fList)) {
-                    // directive wasn't in main field list, add it here
-                    $SQL .= "$mdF='".md5(uniqid(rand(),true))."', ";
-                }            
+        if (($autoMD5Fields = $this->getDirective('autoMD5Fields'))) {
+            foreach ($autoMD5Fields as $f) {
+                if (!in_array($f, $fList)) {
+                    $columns[] = $f;
+                    $values[] = "'" . md5(uniqid(rand(), true)) . "'";
+                }
             }
         }
 
-        // chop off that final comma
-        $SQL = substr($SQL, 0, -2);
+        $quotedColumns = array_map(function($col) {
+            return '"' . $col . '"';
+        }, $columns);
+        $colList = implode(', ', $quotedColumns);
+        $valList = implode(', ', $values);
 
-        // execute the query
-        $rh = $database->query($SQL);
+        // Detect DB type (you may need to adapt this to your framework)
+        $dbType = $this->siteConfig->getVar('db','dbType');
 
-        $this->dbErrorCheck($rh);
-
-        // if it was an add, return the id of the new record
-        return mysql_insert_id();
-
+        if ($dbType === 'pgsql') {
+            $SQL = "INSERT INTO {$table} ({$colList}) VALUES ({$valList}) RETURNING \"idxNum\"";
+            $rh = $database->query($SQL);
+            $this->dbErrorCheck($rh);
+            $row = $rh->fetch(PDO::FETCH_ASSOC);
+            return isset($row['id']) ? $row['id'] : null;
+        } else { // assume MySQL
+            $SQL = "INSERT INTO {$table} ({$colList}) VALUES ({$valList})";
+            $rh = $database->query($SQL);
+            $this->dbErrorCheck($rh);
+            return $database->lastInsertId();
+            return mysql_insert_id();
+        }
     }
 
 }
