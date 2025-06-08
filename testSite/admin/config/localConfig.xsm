@@ -58,9 +58,9 @@
             <VAR name="sendNoCacheHeaders"      value="true"   desc="if this is true, a header will be sent to stop browsers from caching pages" />
         </SECTION>
         <SECTION name="db" id="default">
-            <VAR name="dbType" value="mysql" />
+            <VAR name="dbType" value="pgsql" />
             <VAR name="defaultConnection"   value="true" />
-            <VAR name="DSN"  value = "mysql:host=localhost;dbname=test" />
+            <VAR name="DSN"  value = "pgsql:host=localhost;port=5432;dbname=test" />
             <VAR name="userName"  value = "testUser" />
             <VAR name="passWord"  value = "testPass" />
             <VAR name="persistent"  value = "true" />
