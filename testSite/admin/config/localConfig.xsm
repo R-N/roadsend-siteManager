@@ -66,8 +66,8 @@
             <VAR name="persistent"  value = "true" />
         </SECTION>                                
         <SECTION name="db" id="secondary">        
-            <VAR name="dbType" value="mysql" />
-            <VAR name="DSN"  value = "mysql:host=localhost;dbname=test" />
+            <VAR name="dbType" value="pgsql" />
+            <VAR name="DSN"  value = "pgsql:host=localhost;port=5432;dbname=test" />
             <VAR name="userName"  value = "testUser" />
             <VAR name="passWord"  value = "testPass" />
             <VAR name="persistent"  value = "true" />
