@@ -126,20 +126,20 @@ class SM_sessionContainer_database extends SM_sessionContainer {
                     // remove query
                     $dSQL = "
                              DELETE FROM 
-                                $sessionTable
+                                \"$sessionTable\"
                              WHERE 
-                                hashID='$hashID'
+                                \"hashID\"='$hashID'
                             ";
                     // add query
                     $aSQL = "INSERT INTO 
                                 $sessionTable
                             (
-                                sessionID,
-                                hashID,
-                                remoteHost,
-                                createStamp,
-                                dataKey,
-                                dataVal
+                                \"sessionID\",
+                                \"hashID\",
+                                \"remoteHost\",
+                                \"createStamp\",
+                                \"dataKey\",
+                                \"dataVal\"
                             )
                             VALUES (
                                 '{$this->sessionH->sessionID}',
@@ -231,9 +231,7 @@ class SM_sessionContainer_database extends SM_sessionContainer {
         // good session, load persistents
         switch ($dbType) {
         case 'pgsql':
-            $keyField = strtolower($keyField);
-            $dataField = strtolower($dataField);
-            $SQL = "SELECT dataKey, dataVal FROM $sessionTable WHERE sessionID='{$this->sessionH->sessionID}'";
+            $SQL = "SELECT \"dataKey\", \"dataVal\" FROM \"$sessionTable\" WHERE \"sessionID\"='{$this->sessionH->sessionID}'";
             break;
         case 'mysql':
             $SQL = "SELECT dataKey, dataVal FROM $sessionTable WHERE sessionID='{$this->sessionH->sessionID}'";

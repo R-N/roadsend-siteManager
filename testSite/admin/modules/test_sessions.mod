@@ -85,17 +85,15 @@ class test_sessions extends testBase {
         // set persistent
         // get persistent
         $val = $this->sessionH->getSessionVar('testPersistent');
-        $current = $val;
         if ($val != 'bar' && $this->sessionH->hasCookies) {
             $this->sessionH->setSessionVar('testPersistent','bar');
-            $current = $this->sessionH->getSessionVar('testPersistent');
-            //$this->sessionH->reloadPage();
+            $this->sessionH->reloadPage();
         }
 
         $actual = $val;
         $expect = 'bar';
         $this->addTest('Persistent Variables', 
-                       'test getting/setting persistent variables. current: '. $current,
+                       'test getting/setting persistent variables',
                        $expect,
                        $actual);
 

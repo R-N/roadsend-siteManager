@@ -86,10 +86,10 @@ class SM_memberSystem_default extends SM_memberSystem {
             $SQL = "SELECT
                         *
                     FROM
-                        {$memberTable}
+                        \"{$memberTable}\"
                     WHERE
-                        {$userNameField} = $quoteduserName AND
-                        {$passWordField} = $quotedpassWord
+                        \"{$userNameField}\" = $quoteduserName AND
+                        \"{$passWordField}\" = $quotedpassWord
                    ";
             break;
         case 'oci8':
@@ -165,9 +165,9 @@ class SM_memberSystem_default extends SM_memberSystem {
         case 'pgsql':
             $SQL = "DELETE
                     FROM
-                        {$memberSessionsTable}
+                        \"{$memberSessionsTable}\"
                     WHERE
-                        {$sIDField} = '$sID'
+                        \"{$sIDField}\" = '$sID'
                    ";
             break;
         case 'oci8':
@@ -221,9 +221,9 @@ class SM_memberSystem_default extends SM_memberSystem {
         switch ($dbType) {
         case 'pgsql':
             $SQL = "DELETE FROM 
-                        {$memberSessionsTable}
+                        \"{$memberSessionsTable}\"
                     WHERE
-                        {$uIDField} = '$uID'
+                        \"{$uIDField}\" = '$uID'
                    ";
             break;
         case 'oci8':
@@ -247,11 +247,11 @@ class SM_memberSystem_default extends SM_memberSystem {
         switch ($dbType) {
         case 'pgsql':
             $SQL = "INSERT INTO 
-                        {$memberSessionsTable}
+                        \"{$memberSessionsTable}\"
                         (
-                            {$uIDField},
-                            {$sIDField},
-                            {$dcField}
+                            \"{$uIDField}\",
+                            \"{$sIDField}\",
+                            \"{$dcField}\"
                         )
                     VALUES (
                         '$uID',
@@ -306,9 +306,9 @@ class SM_memberSystem_default extends SM_memberSystem {
         switch ($dbType) {
         case 'pgsql':
             $SQL = "DELETE FROM 
-                        {$memberSessionsTable}
+                        \"{$memberSessionsTable}\"
                     WHERE
-                        date_part('epoch',current_timestamp) - date_part('epoch',{$dcField}) >= {$loginTTL}
+                        date_part('epoch',current_timestamp) - date_part('epoch',\"{$dcField}\") >= {$loginTTL}
                    ";
             break;
         case 'mysql':
@@ -404,12 +404,12 @@ class SM_memberSystem_default extends SM_memberSystem {
         switch ($dbType) {
         case 'pgsql':
             $SQL = "SELECT 
-                        {$memberTable}.*, date_part('epoch',{$memberSessionsTable}.{$dcField}) AS TTL
+                        \"{$memberTable}\".*, date_part('epoch',\"{$memberSessionsTable}\".\"{$dcField}\") AS \"TTL\"
                     FROM 
-                        {$memberTable},{$memberSessionsTable}
+                        \"{$memberTable}\",\"{$memberSessionsTable}\"
                     WHERE
-                        {$sIDField}='$this->sessionID' AND
-                        {$memberTable}.{$uIDField} = {$memberSessionsTable}.{$uIDField}";
+                        \"{$sIDField}\"='$this->sessionID' AND
+                        \"{$memberTable}\".\"{$uIDField}\" = \"{$memberSessionsTable}\".\"{$uIDField}\"";
             break;
         case 'mysql':
             $SQL = "SELECT 

@@ -143,20 +143,20 @@ class memberEdit extends SM_module {
 
                     if ($this->sessionH->isMember()) {
     
-                         $SQL = "UPDATE $memberTable SET 
-                         $passWordField='".$myForm->getVar('passWord')."', 
-                         emailAddress='".$myForm->getVar('emailAddress')."',
-                         firstName='".$myForm->getVar('firstName')."', 
-                         lastName='".$myForm->getVar('lastName')."'
-                         WHERE idxNum = " .$myMember['idxNum'].";";
+                         $SQL = "UPDATE \"$memberTable\" SET 
+                         \"$passWordField\"='".$myForm->getVar('passWord')."', 
+                         \"emailAddress\"='".$myForm->getVar('emailAddress')."',
+                         \"firstName\"='".$myForm->getVar('firstName')."', 
+                         \"lastName\"='".$myForm->getVar('lastName')."'
+                         WHERE \"idxNum\" = " .$myMember['idxNum'].";";
 
                     } else {
 
                         // generate a unique global member ID
                         $globalID = md5(uniqid(rand()));
 
-                        $SQL = "INSERT INTO $memberTable 
-                        (uID,$userNameField,$passWordField,emailAddress,firstName,lastName,dateCreated)
+                        $SQL = "INSERT INTO \"$memberTable\" 
+                        (\"uID\",\"$userNameField\",\"$passWordField\",\"emailAddress\",\"firstName\",\"lastName\",\"dateCreated\")
                         VALUES ( 
                         '$globalID',
                         '".$myForm->getVar('userName')."', 
