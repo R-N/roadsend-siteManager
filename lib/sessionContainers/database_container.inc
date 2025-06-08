@@ -254,6 +254,12 @@ class SM_sessionContainer_database extends SM_sessionContainer {
 
         // gather stored persistents
         while ($rr = $rh->fetch()) {
+            if (!array_key_exists($keyField, $rr)) {
+                $keyField = strtolower($keyField);
+            }
+            if (!array_key_exists($dataField, $rr)) {
+                $dataField = strtolower($dataField);
+            }
 
             $varName = $rr[$keyField];
             $dataVal = $rr[$dataField];
