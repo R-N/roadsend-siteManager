@@ -84,7 +84,7 @@ class dbUniqueFilter extends SM_entityFilter {
 
         switch ($this->siteConfig->getVar('db','dbType')) {
         case 'pgsql':
-            $SQL = "SELECT \"{$this->directive['checkField']}\" FROM \"{$this->directive['tableName']}\" WHERE \"{$this->directive['checkField']}\"='$this->data' $wC";
+            $SQL = "SELECT {$this->directive['checkField']} FROM {$this->directive['tableName']} WHERE {$this->directive['checkField']}='$this->data' $wC";
             break;
         case 'mysql':
         default:
