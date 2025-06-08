@@ -121,6 +121,10 @@ class dbSelectEntity extends selectEntity {
            $dbName = $this->directive['dbOverRide'];
 
         $SQL = "SELECT {$this->directive['dataField']} AS table_id, {$this->directive['viewField']} FROM {$this->directive['tableName']} $wC $gB $oB";
+        $dbType = $this->siteConfig->getVar('db','dbType');
+        if ($dbType == 'pgsql'){
+            $SQL = mysqlToPostgres($SQL);
+        }
         
         $rh = $this->dbHL[$this->directive['dataBaseID']]->query($SQL);
         if ($this->dbErrorCheck($rh, $this)) {

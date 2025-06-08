@@ -81,6 +81,7 @@ require($SM_rootDir."lib/auth.inc");
 // ROOT SITEMANAGER CLASS
 $SM_siteManager = new SM_siteManagerRoot();
 $SM_siteManager->boot();
+$SM_siteManager->includeLib('helpers');
 
 if ($SM_develState) {
     SM_debugLog("Initializing SiteManager...");
