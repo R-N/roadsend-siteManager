@@ -231,6 +231,8 @@ class SM_sessionContainer_database extends SM_sessionContainer {
         // good session, load persistents
         switch ($dbType) {
         case 'pgsql':
+            $keyField = strtolower($keyField);
+            $dataField = strtolower($dataField);
             $SQL = "SELECT dataKey, dataVal FROM $sessionTable WHERE sessionID='{$this->sessionH->sessionID}'";
             break;
         case 'mysql':
