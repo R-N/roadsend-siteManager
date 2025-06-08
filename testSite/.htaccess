@@ -1,0 +1,20 @@
+<IfModule mod_mime.c>
+  AddType application/x-httpd-php .mod
+</IfModule>
+AddType application/x-httpd-php .php
+AddType application/x-httpd-php-source .phps
+AddType application/x-httpd-php .mod
+AddType application/x-httpd-php .inc
+DirectoryIndex index.mod index.php index.html
+
+Action application/x-httpd-php "/php/php-cgi.exe"
+<FilesMatch "\.(inc|tpt|stp|mod|xsm|cpt)$">
+	Order allow,deny
+	Deny from all
+</FilesMatch>
+
+# here is an extended list of extensions you might also want to block
+#<FilesMatch "\.(txt|tpl|bak|pl|sh|cgi|rej|ihtml|sql)$">
+#   Order allow,deny
+#   Deny from all
+#</FilesMatch>
