@@ -9,15 +9,15 @@
 #
 
 CREATE TABLE sessions (
-  "idxNum" SERIAL PRIMARY KEY,
-  "sessionID" VARCHAR(32) NOT NULL DEFAULT '',
-  "hashID" VARCHAR(32) NOT NULL DEFAULT '',
-  "createStamp" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  "remoteHost" VARCHAR(20),
-  "dataKey" VARCHAR(255) NOT NULL DEFAULT '',
-  "dataVal" TEXT,
-  UNIQUE ("hashID")
+  idxNum int(10) unsigned NOT NULL auto_increment,
+  sessionID varchar(32) DEFAULT '' NOT NULL,
+  hashID varchar(32) DEFAULT '' NOT NULL,
+  createStamp datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+  remoteHost varchar(20),
+  dataKey varchar(255) DEFAULT '' NOT NULL,
+  dataVal TEXT,
+  PRIMARY KEY (idxNum),
+  KEY createStamp (createStamp),
+  KEY sessionID (sessionID),
+  UNIQUE hashID (hashID)
 );
-
-CREATE INDEX "createStamp_idx" ON sessions ("createStamp");
-CREATE INDEX "sessionID_idx" ON sessions ("sessionID");

@@ -2,15 +2,16 @@
 # Table structure for table 'members'
 #
 CREATE TABLE members (
-  "idxNum" SERIAL PRIMARY KEY,
-  "uID" CHAR(32) NOT NULL,
-  "userName" VARCHAR(30) NOT NULL DEFAULT '',
-  "passWord" VARCHAR(30) NOT NULL DEFAULT '',
-  "emailAddress" VARCHAR(60) NOT NULL DEFAULT '',
-  "firstName" VARCHAR(50),
-  "lastName" VARCHAR(50),
-  "dateCreated" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE ("emailAddress"),
-  UNIQUE ("uID"),
-  UNIQUE ("userName")
+  idxNum int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
+  uID	char(32) NOT NULL,
+  userName varchar(30) DEFAULT '' NOT NULL,
+  passWord varchar(30) DEFAULT '' NOT NULL,
+  emailAddress varchar(60) DEFAULT '' NOT NULL,
+  firstName varchar(50),
+  lastName varchar(50),
+  dateCreated datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+  PRIMARY KEY (idxNum),
+  UNIQUE emailAddress (emailAddress),
+  UNIQUE uid (uid),
+  UNIQUE userName (userName)
 );
