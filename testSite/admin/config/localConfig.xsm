@@ -6,9 +6,11 @@
             <VAR name="2.2.x"               value = "false"  desc = "set to true if you want more compatibility with SiteManager 2.2.x" />
         </SECTION>
         <SECTION name="dirs">
+            <VAR name="smRoot"      value = "D:/laragon4/www/siteManager/" />
             <VAR name="base"        value = "{$adminDir}" desc="global variable that is defined in common.inc"/>
             <VAR name="config"      value = "{$base}config/"/>
             <VAR name="libs"        value = "{$base}lib/"/>
+            <VAR name="sContainers" value = "{$base}lib/sessionContainers/" />
             <VAR name="modules"     value = "{$base}modules/"/>            
             <VAR name="templates"   value = "{$base}templates/"/>                        
             <VAR name="codePlates"  value = "{$base}codePlates/"/>            
