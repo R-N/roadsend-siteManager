@@ -1,8 +1,8 @@
-CREATE TABLE memberSessions (
-idxNum	INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-uID	char(32) NOT NULL,
-sID	char(32) NOT NULL,
-dateCreated datetime not null,
-UNIQUE(uID),
-UNIQUE(sID)
-)
+CREATE TABLE "memberSessions" (
+  "idxNum" SERIAL PRIMARY KEY,
+  "uID" CHAR(32) NOT NULL,
+  "sID" CHAR(32) NOT NULL,
+  "dateCreated" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE ("uID"),
+  UNIQUE ("sID")
+);
