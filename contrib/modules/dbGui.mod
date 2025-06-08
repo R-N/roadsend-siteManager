@@ -219,7 +219,53 @@ class SM_dbGui extends SM_abstractDbEditor {
 	if (empty($this->dbHL[$this->directive['dataBaseID']]))
 	   $this->fatalErrorPage("Invalid database handle: ".$this->directive['dataBaseID']);
 
-        $rh = $this->dbHL[$this->directive['dataBaseID']]->query('DESC '.$this->directive['tableName']);
+        $dbType = $this->siteConfig->getVar('db','dbType');
+        $rh = null;
+        switch ($dbType) {
+        case 'pgsql':
+            $tableName = $this->directive['tableName'];
+            $rh = $this->dbHL[$this->directive['dataBaseID']]->query("
+                SELECT DISTINCT
+                    c.column_name AS \"Field\",
+                    c.data_type AS \"Type\",
+                    c.is_nullable AS \"Null\",
+                    CASE 
+                        WHEN tc.constraint_type = 'PRIMARY KEY' THEN 'PRI'
+                        WHEN tc.constraint_type = 'UNIQUE' THEN 'UNI'
+                        WHEN tc.constraint_type = 'FOREIGN KEY' THEN 'MUL'
+                        ELSE ''
+                    END AS \"Key\",
+                    c.column_default AS \"Default\",
+                    CASE 
+                        WHEN c.is_identity = 'YES' THEN 'auto_increment'
+                        ELSE ''
+                    END AS \"Extra\",
+                    CASE 
+                        WHEN tc.constraint_type = 'PRIMARY KEY' THEN TRUE
+                        ELSE FALSE
+                    END AS \"primary_key\"
+                FROM 
+                    information_schema.columns c
+                LEFT JOIN 
+                    information_schema.key_column_usage kcu 
+                    ON c.table_schema = kcu.table_schema 
+                    AND c.table_name = kcu.table_name 
+                    AND c.column_name = kcu.column_name
+                LEFT JOIN 
+                    information_schema.table_constraints tc 
+                    ON kcu.constraint_name = tc.constraint_name
+                WHERE 
+                    c.table_schema = 'public' 
+                    AND c.table_name = '$tableName';
+            ");
+            break;
+        case 'mysql':
+            $rh = $this->dbHL[$this->directive['dataBaseID']]->query('DESC '.$this->directive['tableName']);
+            break;
+        default:
+            $this->fatalErrorPage("Unsupported database type: ($dbType)");
+            break;
+        }
         $this->dbErrorCheck($rh);
         //$res = $this->dbHL[$this->directive['dataBaseID']]->tableInfo($this->directive['tableName']);
     
