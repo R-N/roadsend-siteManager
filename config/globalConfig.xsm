@@ -111,6 +111,7 @@
             <VAR name="uIDField"            value="uID"              desc="the unique user id field" />            
             <VAR name="sIDField"            value="sID"              desc="the unique session id field" />
             <VAR name="dcField"             value="dateCreated"      desc="DATETIME field of session creation" />            
+            <VAR name="emailAddressField"   value="emailAddress"     desc="the email address field" />            
         </SECTION>
     </SITE>
         

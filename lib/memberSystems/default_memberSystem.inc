@@ -61,6 +61,74 @@ class SM_memberSystem_default extends SM_memberSystem {
     }
 
     /**
+     * Attempt to create a member session using just the username or email.
+     * This version is modified for SSO login where password is not used.
+     * 
+     * @param string $userNameOrEmail - SSO-provided username or email
+     * @return bool true if the user is authenticated successfully, false otherwise
+     */
+    function attemptLoginSSO($user, $emailAddress) {
+
+        if (!$this->sessionH->hasCookies)
+            return false;
+
+        $memberTable       = $this->directive['memberTable'];
+        $dbType            = $this->directive['dbType'];
+        $uIDField               = $this->directive['uIDField'];
+        $userNameField     = $this->directive['userNameField'];
+        $emailAddressField = $this->directive['emailAddressField'];
+
+        $quotedUser = $this->dbHL[$this->dbID]->quote($user);
+        $quotedEmailAddress = $this->dbHL[$this->dbID]->quote($emailAddress);
+
+        switch ($dbType) {
+        case 'pgsql':
+            $SQL = "SELECT
+                        *
+                    FROM
+                        \"{$memberTable}\"
+                    WHERE
+                        \"{$uIDField}\" = $quotedUser OR
+                        \"{$userNameField}\" = $quotedUser OR
+                        \"{$emailAddressField}\" = $quotedEmailAddress
+                ";
+            break;
+
+        case 'oci8':
+        case 'mysql':
+            $SQL = "SELECT
+                        *
+                    FROM
+                        {$memberTable}
+                    WHERE
+                        {$uIDField} = $quotedUser OR
+                        {$userNameField} = $quotedUser OR
+                        {$emailAddressField} = $quotedEmailAddress
+                ";
+            break;
+
+        default:
+            $this->fatalErrorPage("Attempting to use member sessions with an unsupported database type: ($dbType)");
+            break;
+        }
+
+        // issue query
+        $rh = $this->dbHL[$this->dbID]->query($SQL);
+        $this->dbErrorCheck($rh);
+
+        $rr = $rh->fetch();
+
+        if ($rr) {
+            $this->processLogin($rr);
+
+            return true;
+        }
+
+        return false;
+    }
+
+
+    /**
      * attempt to create a member session with the username/password combo provided
      * @param string $userName the username to use for authentication
      * @param string $passWord the password to use for authentication
@@ -74,12 +142,11 @@ class SM_memberSystem_default extends SM_memberSystem {
         // define some configured variables we'll be using
         $memberTable            = $this->directive['memberTable'];
         $dbType                 = $this->directive['dbType'];
-        $uIDField               = $this->directive['uIDField'];
         $userNameField          = $this->directive['userNameField'];
         $passWordField          = $this->directive['passWordField'];
 
-	$quoteduserName = $this->dbHL[$this->dbID]->quote($userName);
-	$quotedpassWord = $this->dbHL[$this->dbID]->quote($passWord);
+        $quotedUserName = $this->dbHL[$this->dbID]->quote($userName);
+        $quotedPassWord = $this->dbHL[$this->dbID]->quote($passWord);
 
         switch ($dbType) {
         case 'pgsql':
@@ -88,8 +155,8 @@ class SM_memberSystem_default extends SM_memberSystem {
                     FROM
                         \"{$memberTable}\"
                     WHERE
-                        \"{$userNameField}\" = $quoteduserName AND
-                        \"{$passWordField}\" = $quotedpassWord
+                        \"{$userNameField}\" = $quotedUserName AND
+                        \"{$passWordField}\" = $quotedPassWord
                    ";
             break;
         case 'oci8':
@@ -99,8 +166,8 @@ class SM_memberSystem_default extends SM_memberSystem {
                     FROM
                         {$memberTable}
                     WHERE
-                        {$userNameField} = $quoteduserName AND
-                        {$passWordField} = $quotedpassWord
+                        {$userNameField} = $quotedUserName AND
+                        {$passWordField} = $quotedPassWord
                    ";
             break;
         default:
@@ -116,21 +183,7 @@ class SM_memberSystem_default extends SM_memberSystem {
 
         // if $rr has data, it's a good session
         if ($rr) {
-
-            // create a member session
-            $this->_createMemberSessionEntry($rr[$uIDField]);
-
-            // finally, indicate they are now a member
-            $this->isGuest      = false;
-            $this->isMember     = true;
-            $this->memberData   = $rr;
-            $this->memberData['TTL']    = time();
-
-            // if they are using persistent members, update var
-            if ($this->directive['usePersistentMembers']) {
-                global $SM_siteManager;
-                $SM_siteManager->sessionH->setPersistent(SM_MEMBER_PVAR, $this->memberData);
-            }
+            $this->processLogin($rr);
 
             return true;
             
@@ -141,6 +194,24 @@ class SM_memberSystem_default extends SM_memberSystem {
         }
 
 
+    }
+
+    function processLogin($rr){
+        $uIDField = $this->directive['uIDField'];
+        // create a member session
+        $this->_createMemberSessionEntry($rr[$uIDField]);
+
+        // finally, indicate they are now a member
+        $this->isGuest      = false;
+        $this->isMember     = true;
+        $this->memberData   = $rr;
+        $this->memberData['TTL']    = time();
+
+        // if they are using persistent members, update var
+        if ($this->directive['usePersistentMembers']) {
+            global $SM_siteManager;
+            $SM_siteManager->sessionH->setPersistent(SM_MEMBER_PVAR, $this->memberData);
+        }
     }
 
 

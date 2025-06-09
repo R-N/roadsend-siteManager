@@ -788,6 +788,13 @@ class SM_session extends SM_object {
             return $this->memberSystem->getMemberData();
     }
     
+    function attemptLoginSSO($userName, $emailAddress) {
+        if ($this->directive['useMemberSystem'] && $this->hasCookies)
+            return $this->memberSystem->attemptLoginSSO($userName, $emailAddress);
+        else
+            return false;
+    }
+
     /**
      * attempt to create a member session with the username/password combo provided
      * just pass it on the to member system here, if it's active

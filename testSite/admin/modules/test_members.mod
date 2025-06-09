@@ -62,6 +62,10 @@ class test_members extends testBase {
         $mod1->addDirective('showLoginStatus',true);
         $this->say($mod1->run());
 
+        $this->say("<br>");
+        $this->say("<button onclick=\"window.location.href='/oauth2/start?rd=/home/ssoLogin.php'\">SSO Login</button> ");
+        $this->say("<button onclick=\"window.location.href='http://localhost:8080/realms/rsec/protocol/openid-connect/logout?client_id=test-site&post_logout_redirect_uri=http://localhost:4180/home/members.php?l=1'\">SSO Logout</button>");
+
         $this->say("<br><br>");
     
         $dbSettings = array('tableName' => 'members',

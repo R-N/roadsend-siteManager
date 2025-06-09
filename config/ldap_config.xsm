@@ -23,4 +23,5 @@
             <VAR name="dcField"             value="dateCreated"      desc="DATETIME field of session creation" />            
             <VAR name="convertFrom"         value="UTF8"             desc="type of encoding the LDAP server uses" />
             <VAR name="convertTo"           value="ISO-8859-1"       desc="type of encoding we want to convert our LDAP data to" />
+            <VAR name="emailAddressField"   value="emailAddress"     desc="the email address field" />            
         </SECTION>
