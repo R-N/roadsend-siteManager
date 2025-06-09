@@ -21,6 +21,12 @@ define('SM_UNKNOWN',0);             // undefined
 define('SM_TEMPLATE',1);            // SM_layoutTemplate object
 define('SM_CODEPLATE',2);           // SM_codePlate object
 
+if (!function_exists('concat_path')) {
+    function concat_path($p1, $p2){
+       return rtrim($p1, '/') . '/' . ltrim($p2, '/');
+   }
+}
+
 /**
  * SM_siteManagerRoot is the highest level class for implementing
  * a site using siteManager
@@ -486,7 +492,6 @@ class SM_siteManagerRoot extends SM_object {
 
     }
 
-
     /**
      * attempt to find the requested file on disk
      *
@@ -517,48 +522,38 @@ class SM_siteManagerRoot extends SM_object {
             if (is_array($path)) {
                 $realPath = '';
                 foreach ($path as $p) {
-                    $check1 = $p.'/'.$fName;
+                    $check1 = concat_path($p, $fName);
                     if (file_exists($check1) && !is_dir($check1)) {
                         //If we found something, we're done.
                         $this->debugLog("found: $check1", 6);
                          return $check1;
                     }
                 }
-
                 // If we didn't find anything and we want to throw
                 // and error because we couldn't find the file, do so.
                 if ($fatalFNF)
                     $this->fatalErrorPage("Requested SiteManager file ($fName) was not found in the path array:<br>".join($path,'<br>'));
-
-            } else if(file_exists($path.'/'.$fName)) {
-
+            } else {
+                $filePath = concat_path($path, $fName);
+                if(file_exists($filePath)) {
                     // Only one place to check. If it's there, we're done.
-                    $p = $path.'/'.$fName;
-                    $this->debugLog("found: $p", 6);
-                    return $p;
-
-            } else if($fatalFNF) {
-
+                    $this->debugLog("found: $filePath", 6);
+                    return $filePath;
+                } else if($fatalFNF) {
                     //If we fall through to here, the file doesn't exist and we want to throw an error.
-                    $this->fatalErrorPage("Requested SiteManager file ($fName) was not found, and the search path array was empty.");
-
+                    $this->fatalErrorPage("Requested SiteManager file ($filePath) was not found, and the search path array was empty.");
+                }
             }
-
         } else {
-
             // They specified a path, so we're not checking any of our paths.
             // either php can find the file or it can't
             if (file_exists($fName)) {
-
                 // found file
                 $this->debugLog("found: $fName", 6);
                 return $fName;
-
             } else if ($fatalFNF) {
-
                 // File not found. throw an error.
                 $this->fatalErrorPage("Requested SiteManager file ($fName) was not found, and the search path array was empty.");
-
             }
         }
 

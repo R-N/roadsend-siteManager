@@ -8,6 +8,21 @@
         <SECTION name="dirs">
             <VAR name="smRoot"      value = "D:/laragon4/www/siteManager/" />
             <VAR name="base"        value = "{$adminDir}" desc="global variable that is defined in common.inc"/>
+            <VAR name="redist"      value = "{$smRoot}redist/" />
+            <VAR name="pear"        value = "{$redist}pear/" />
+            <VAR name="config"      value = "{$smRoot}config/"/>
+            <VAR name="libs"        value = "{$smRoot}lib/"/>
+            <VAR name="libs"        value = "{$smRoot}contrib/lib/" />
+            <VAR name="modules"     value = "{$smRoot}contrib/modules/"/>            
+            <VAR name="templates"   value = "{$smRoot}contrib/templates/"/>            
+            <VAR name="smartForms"  value = "{$smRoot}contrib/smartForms/"/>
+            <VAR name="sfEntities"  value = "{$smRoot}lib/sfInputEntities/"/>
+            <VAR name="sfFilters"   value = "{$smRoot}lib/sfFilters/"/>            
+            <VAR name="smTags"      value = "{$smRoot}lib/smTags/" />
+            <VAR name="sContainers" value = "{$smRoot}lib/sessionContainers/" />
+            <VAR name="cache"       value = "{$smRoot}cache/"/>
+            <VAR name="memberSystems" value = "{$smRoot}lib/memberSystems/" />            
+            <VAR name="configReaders" value = "{$smRoot}lib/configReaders/" />     
             <VAR name="config"      value = "{$base}config/"/>
             <VAR name="libs"        value = "{$base}lib/"/>
             <VAR name="sContainers" value = "{$base}lib/sessionContainers/" />
