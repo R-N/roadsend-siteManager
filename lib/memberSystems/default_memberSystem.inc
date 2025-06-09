@@ -67,7 +67,7 @@ class SM_memberSystem_default extends SM_memberSystem {
      * @param string $userNameOrEmail - SSO-provided username or email
      * @return bool true if the user is authenticated successfully, false otherwise
      */
-    function attemptLoginSSO($user, $emailAddress) {
+    function attemptLoginSSO($user, $userName, $emailAddress) {
 
         if (!$this->sessionH->hasCookies)
             return false;
@@ -79,6 +79,7 @@ class SM_memberSystem_default extends SM_memberSystem {
         $emailAddressField = $this->directive['emailAddressField'];
 
         $quotedUser = $this->dbHL[$this->dbID]->quote($user);
+        $quotedUserName = $this->dbHL[$this->dbID]->quote($userName);
         $quotedEmailAddress = $this->dbHL[$this->dbID]->quote($emailAddress);
 
         switch ($dbType) {
@@ -89,7 +90,7 @@ class SM_memberSystem_default extends SM_memberSystem {
                         \"{$memberTable}\"
                     WHERE
                         \"{$uIDField}\" = $quotedUser OR
-                        \"{$userNameField}\" = $quotedUser OR
+                        \"{$userNameField}\" = $quotedUserName OR
                         \"{$emailAddressField}\" = $quotedEmailAddress
                 ";
             break;
@@ -102,7 +103,7 @@ class SM_memberSystem_default extends SM_memberSystem {
                         {$memberTable}
                     WHERE
                         {$uIDField} = $quotedUser OR
-                        {$userNameField} = $quotedUser OR
+                        {$userNameField} = $quotedUserName OR
                         {$emailAddressField} = $quotedEmailAddress
                 ";
             break;

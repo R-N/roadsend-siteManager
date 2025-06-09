@@ -41,11 +41,12 @@ class SM_ssoLogin extends SM_module {
 
         // get username and email from proxy headers
         $user = isset($_SERVER['HTTP_X_FORWARDED_USER']) ? $_SERVER['HTTP_X_FORWARDED_USER'] : null;
+        $userName = isset($_SERVER['HTTP_X_FORWARDED_PREFERRED_USERNAME']) ? $_SERVER['HTTP_X_FORWARDED_PREFERRED_USERNAME'] : null;
         $emailAddress = isset($_SERVER['HTTP_X_FORWARDED_EMAIL']) ? $_SERVER['HTTP_X_FORWARDED_EMAIL'] : null;
 
         if ($user || $emailAddress) {
             // attempt SSO login using username and email
-            if ($this->sessionH->attemptLoginSSO($user, $emailAddress)) {
+            if ($this->sessionH->attemptLoginSSO($user, $userName, $emailAddress)) {
                 // logged in successfully
                 $this->say("Successful Login!");
                 header("Location: /");

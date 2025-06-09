@@ -788,9 +788,9 @@ class SM_session extends SM_object {
             return $this->memberSystem->getMemberData();
     }
     
-    function attemptLoginSSO($userName, $emailAddress) {
+    function attemptLoginSSO($user, $userName, $emailAddress) {
         if ($this->directive['useMemberSystem'] && $this->hasCookies)
-            return $this->memberSystem->attemptLoginSSO($userName, $emailAddress);
+            return $this->memberSystem->attemptLoginSSO($user, $userName, $emailAddress);
         else
             return false;
     }
