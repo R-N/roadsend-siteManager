@@ -1,5 +1,7 @@
 <?php
 
+require_once 'JWT.php';
+use \Firebase\JWT\JWT;
 class SM_ssoLogin extends SM_module {
 
     function moduleConfig() {
@@ -14,6 +16,26 @@ class SM_ssoLogin extends SM_module {
         // If already logged in, just redirect
         if (!$this->sessionH->isGuest()) {
             header("Location: /");
+            return;
+        }
+
+        $accessToken = isset($_SERVER['HTTP_X_FORWARDED_ACCESS_TOKEN']) ? $_SERVER['HTTP_X_FORWARDED_ACCESS_TOKEN'] : '';
+
+        global $SM_siteManager;
+        $sName = $SM_siteManager->findSMfile('public_key', 'keys', 'pem', true);
+        $publicKey = file_get_contents($sName);
+        $pubKeyResource = openssl_pkey_get_public($publicKey);
+
+        if ($pubKeyResource === false) {
+            $this->say("Failed to load public key");
+            return;
+        }
+
+        $this->say($accessToken);
+        try {
+            $decoded = JWT::decode($accessToken, $publicKey, array('RS256'));
+        } catch (Exception $e) {
+            $this->say("Invalid token: " . $e->getMessage());
             return;
         }
 

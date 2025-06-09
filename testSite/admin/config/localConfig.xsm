@@ -25,6 +25,7 @@
             <VAR name="configReaders" value = "{$smRoot}lib/configReaders/" />     
             <VAR name="config"      value = "{$base}config/"/>
             <VAR name="libs"        value = "{$base}lib/"/>
+            <VAR name="keys"        value = "{$base}keys/"/>
             <VAR name="sContainers" value = "{$base}lib/sessionContainers/" />
             <VAR name="modules"     value = "{$base}modules/"/>            
             <VAR name="templates"   value = "{$base}templates/"/>                        
