@@ -45,9 +45,9 @@ class SM_ssoLogin extends SM_module {
         }
 
         // get username and email from proxy headers
-        $user = isset($_SERVER['HTTP_X_FORWARDED_USER']) ? $_SERVER['HTTP_X_FORWARDED_USER'] : isset($_SERVER['HTTP_X_AUTHENTIK_UID']) ? $_SERVER['HTTP_X_AUTHENTIK_UID'] : null;
-        $userName = isset($_SERVER['HTTP_X_FORWARDED_PREFERRED_USERNAME']) ? $_SERVER['HTTP_X_FORWARDED_PREFERRED_USERNAME'] : isset($_SERVER['HTTP_X_AUTHENTIK_USERNAME']) ? $_SERVER['HTTP_X_AUTHENTIK_USERNAME'] : null;
-        $emailAddress = isset($_SERVER['HTTP_X_FORWARDED_EMAIL']) ? $_SERVER['HTTP_X_FORWARDED_EMAIL'] : isset($_SERVER['HTTP_X_AUTHENTIK_EMAIL']) ? $_SERVER['HTTP_X_AUTHENTIK_EMAIL'] : null;
+        $user = isset($_SERVER['HTTP_X_FORWARDED_USER']) ? $_SERVER['HTTP_X_FORWARDED_USER'] : (isset($_SERVER['HTTP_X_AUTHENTIK_UID']) ? $_SERVER['HTTP_X_AUTHENTIK_UID'] : null);
+        $userName = isset($_SERVER['HTTP_X_FORWARDED_PREFERRED_USERNAME']) ? $_SERVER['HTTP_X_FORWARDED_PREFERRED_USERNAME'] : (isset($_SERVER['HTTP_X_AUTHENTIK_USERNAME']) ? $_SERVER['HTTP_X_AUTHENTIK_USERNAME'] : null);
+        $emailAddress = isset($_SERVER['HTTP_X_FORWARDED_EMAIL']) ? $_SERVER['HTTP_X_FORWARDED_EMAIL'] : (isset($_SERVER['HTTP_X_AUTHENTIK_EMAIL']) ? $_SERVER['HTTP_X_AUTHENTIK_EMAIL'] : null);
 
         if ($user || $userName || $emailAddress) {
             // attempt SSO login using username and email
