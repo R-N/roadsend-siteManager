@@ -33,7 +33,6 @@ class SM_ssoLogin extends SM_module {
                 return;
             }
 
-            $this->say($accessToken);
             try {
                 $decoded = JWT::decode($accessToken, $publicKey, array('RS256'));
             } catch (Exception $e) {
