@@ -64,7 +64,7 @@ class test_members extends testBase {
 
         $this->say("<br>");
         $this->say("<button onclick=\"window.location.href='/oauth2/start?rd=/home/ssoLogin.php'\">Keycloak Login</button> ");
-        $this->say("<button onclick=\"window.location.href='http://keycloak.localhost/realms/rsec/protocol/openid-connect/logout?client_id=test-site&post_logout_redirect_uri=http://localhost:4180/home/members.php?l=1'\">Keycloak Logout</button>");
+        $this->say("<button onclick=\"window.location.href='http://keycloak.localhost/realms/rsec/protocol/openid-connect/logout?client_id=test-site&post_logout_redirect_uri=http://test-site.localhost/home/members.php?l=1'\">Keycloak Logout</button>");
         $this->say("<br>");
         $this->say("<button onclick=\"window.location.href='http://authentik.localhost/if/flow/test-site-login/'\">Authentik Login</button> ");
         $this->say("<button onclick=\"window.location.href='http://authentik.localhost/if/flow/test-site-logout/'\">Authentik Logout</button>");
